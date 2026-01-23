@@ -45,7 +45,7 @@ docker run -p 8000:8000 mech-eng-api
 ### Health Check
 
 ```bash
-GET /health
+curl http://localhost:8000/health
 ```
 
 Returns service health status.
@@ -53,7 +53,7 @@ Returns service health status.
 ### Root Information
 
 ```bash
-GET /
+curl http://localhost:8000/
 ```
 
 Returns API information and links to documentation.
@@ -65,13 +65,12 @@ Returns API information and links to documentation.
 Calculate gear ratio and speed reduction from gear teeth count.
 
 ```bash
-POST /api/v1/powertrain/gear-ratio
-Content-Type: application/json
-
-{
-  "driver_teeth": 20,
-  "driven_teeth": 60
-}
+curl -X POST http://localhost:8000/api/v1/powertrain/gear-ratio \
+  -H "Content-Type: application/json" \
+  -d '{
+    "driver_teeth": 20,
+    "driven_teeth": 60
+  }'
 
 # Response
 {
@@ -89,14 +88,13 @@ Content-Type: application/json
 Calculate output torque with gear ratio and efficiency.
 
 ```bash
-POST /api/v1/powertrain/torque
-Content-Type: application/json
-
-{
-  "input_torque": 100,
-  "gear_ratio": 3.0,
-  "efficiency": 0.95
-}
+curl -X POST http://localhost:8000/api/v1/powertrain/torque \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input_torque": 100,
+    "gear_ratio": 3.0,
+    "efficiency": 0.95
+  }'
 
 # Response
 {
@@ -114,14 +112,13 @@ Content-Type: application/json
 Calculate power from torque and RPM.
 
 ```bash
-POST /api/v1/powertrain/power
-Content-Type: application/json
-
-{
-  "torque": 100,
-  "rpm": 3000,
-  "unit": "watts"
-}
+curl -X POST http://localhost:8000/api/v1/powertrain/power \
+  -H "Content-Type: application/json" \
+  -d '{
+    "torque": 100,
+    "rpm": 3000,
+    "unit": "watts"
+  }'
 
 # Response
 {
@@ -142,16 +139,15 @@ Content-Type: application/json
 Calculate maximum deflection for simply supported or cantilever beams.
 
 ```bash
-POST /api/v1/beam/deflection
-Content-Type: application/json
-
-{
-  "load": 1000,
-  "length": 2.0,
-  "elastic_modulus": 200e9,
-  "moment_of_inertia": 1e-6,
-  "support_type": "simply_supported"
-}
+curl -X POST http://localhost:8000/api/v1/beam/deflection \
+  -H "Content-Type: application/json" \
+  -d '{
+    "load": 1000,
+    "length": 2.0,
+    "elastic_modulus": 200e9,
+    "moment_of_inertia": 1e-6,
+    "support_type": "simply_supported"
+  }'
 
 # Response
 {
@@ -174,15 +170,14 @@ Content-Type: application/json
 Calculate bending moment at a specific location on the beam.
 
 ```bash
-POST /api/v1/beam/bending-moment
-Content-Type: application/json
-
-{
-  "load": 1000,
-  "length": 4.0,
-  "distance": 2.0,
-  "support_type": "simply_supported"
-}
+curl -X POST http://localhost:8000/api/v1/beam/bending-moment \
+  -H "Content-Type: application/json" \
+  -d '{
+    "load": 1000,
+    "length": 4.0,
+    "distance": 2.0,
+    "support_type": "simply_supported"
+  }'
 
 # Response
 {
@@ -199,14 +194,13 @@ Content-Type: application/json
 Calculate bending stress using the flexure formula.
 
 ```bash
-POST /api/v1/beam/stress
-Content-Type: application/json
-
-{
-  "bending_moment": 1000,
-  "distance_from_neutral": 0.05,
-  "moment_of_inertia": 1e-6
-}
+curl -X POST http://localhost:8000/api/v1/beam/stress \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bending_moment": 1000,
+    "distance_from_neutral": 0.05,
+    "moment_of_inertia": 1e-6
+  }'
 
 # Response
 {
@@ -227,13 +221,12 @@ Content-Type: application/json
 Calculate tensile or compressive stress.
 
 ```bash
-POST /api/v1/stress/tensile
-Content-Type: application/json
-
-{
-  "force": 10000,
-  "area": 0.001
-}
+curl -X POST http://localhost:8000/api/v1/stress/tensile \
+  -H "Content-Type: application/json" \
+  -d '{
+    "force": 10000,
+    "area": 0.001
+  }'
 
 # Response
 {
@@ -251,13 +244,12 @@ Content-Type: application/json
 Calculate shear stress.
 
 ```bash
-POST /api/v1/stress/shear
-Content-Type: application/json
-
-{
-  "force": 5000,
-  "area": 0.0005
-}
+curl -X POST http://localhost:8000/api/v1/stress/shear \
+  -H "Content-Type: application/json" \
+  -d '{
+    "force": 5000,
+    "area": 0.0005
+  }'
 
 # Response
 {
@@ -275,14 +267,13 @@ Content-Type: application/json
 Calculate Von Mises equivalent stress for plane stress condition.
 
 ```bash
-POST /api/v1/stress/von-mises
-Content-Type: application/json
-
-{
-  "sigma_x": 100e6,
-  "sigma_y": 50e6,
-  "tau_xy": 25e6
-}
+curl -X POST http://localhost:8000/api/v1/stress/von-mises \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sigma_x": 100e6,
+    "sigma_y": 50e6,
+    "tau_xy": 25e6
+  }'
 
 # Response
 {
@@ -301,13 +292,12 @@ Content-Type: application/json
 Calculate factor of safety with status classification.
 
 ```bash
-POST /api/v1/stress/safety-factor
-Content-Type: application/json
-
-{
-  "yield_strength": 250e6,
-  "applied_stress": 100e6
-}
+curl -X POST http://localhost:8000/api/v1/stress/safety-factor \
+  -H "Content-Type: application/json" \
+  -d '{
+    "yield_strength": 250e6,
+    "applied_stress": 100e6
+  }'
 
 # Response
 {
@@ -324,28 +314,6 @@ Content-Type: application/json
 - SAFE: SF ≥ 2.0
 - MARGINAL: 1.0 ≤ SF < 2.0
 - UNSAFE: SF < 1.0
-
-## Testing with curl
-
-```bash
-# Health check
-curl http://localhost:8000/health
-
-# Gear ratio calculation
-curl -X POST http://localhost:8000/api/v1/powertrain/gear-ratio \
-  -H "Content-Type: application/json" \
-  -d '{"driver_teeth": 20, "driven_teeth": 60}'
-
-# Beam deflection
-curl -X POST http://localhost:8000/api/v1/beam/deflection \
-  -H "Content-Type: application/json" \
-  -d '{"load": 1000, "length": 2.0, "elastic_modulus": 200e9, "moment_of_inertia": 1e-6, "support_type": "simply_supported"}'
-
-# Safety factor
-curl -X POST http://localhost:8000/api/v1/stress/safety-factor \
-  -H "Content-Type: application/json" \
-  -d '{"yield_strength": 250e6, "applied_stress": 100e6}'
-```
 
 ## Interactive Documentation
 
