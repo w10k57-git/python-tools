@@ -1,8 +1,8 @@
 """Tests for beam mechanics calculation endpoints."""
 
 import pytest
-from httpx import AsyncClient, ASGITransport
 from app.main import app
+from httpx import ASGITransport, AsyncClient
 
 
 class TestBeamCalculations:
@@ -29,7 +29,9 @@ class TestBeamCalculations:
         assert "deflection" in data
         assert "deflection_mm" in data
         assert data["deflection"] > 0
-        assert data["deflection_mm"] == pytest.approx(data["deflection"] * 1000, rel=0.01)
+        assert data["deflection_mm"] == pytest.approx(
+            data["deflection"] * 1000, rel=0.01
+        )
 
     @pytest.mark.asyncio
     async def test_beam_deflection_cantilever(self):

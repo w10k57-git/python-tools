@@ -1,8 +1,8 @@
 """Tests for stress analysis calculation endpoints."""
 
 import pytest
-from httpx import AsyncClient, ASGITransport
 from app.main import app
+from httpx import ASGITransport, AsyncClient
 
 
 class TestStressCalculations:

@@ -1,8 +1,8 @@
 """Tests for powertrain calculation endpoints."""
 
 import pytest
-from httpx import AsyncClient, ASGITransport
 from app.main import app
+from httpx import ASGITransport, AsyncClient
 
 
 class TestPowertrainCalculations:
@@ -95,6 +95,4 @@ class TestPowertrainCalculations:
         data = response.json()
         # At 5252 RPM with 100 lb-ft, power should be approximately 100 HP
         # But we're using Nm, so the relationship is different
-        assert data["power_hp"] == pytest.approx(
-            data["power_watts"] / 745.7, rel=0.01
-        )
+        assert data["power_hp"] == pytest.approx(data["power_watts"] / 745.7, rel=0.01)

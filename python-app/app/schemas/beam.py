@@ -37,9 +37,7 @@ class BendingMomentRequest(BaseModel):
 
     load: float = Field(..., gt=0, description="Applied load in Newtons")
     length: float = Field(..., gt=0, description="Beam length in meters")
-    distance: float = Field(
-        ..., ge=0, description="Distance from support in meters"
-    )
+    distance: float = Field(..., ge=0, description="Distance from support in meters")
     support_type: Literal["simply_supported", "cantilever"] = Field(
         ..., description="Type of beam support"
     )

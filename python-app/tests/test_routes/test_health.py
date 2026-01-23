@@ -1,8 +1,8 @@
 """Tests for health check endpoint."""
 
 import pytest
-from httpx import AsyncClient, ASGITransport
 from app.main import app
+from httpx import ASGITransport, AsyncClient
 
 
 class TestHealthCheck:
@@ -10,7 +10,9 @@ class TestHealthCheck:
 
     @pytest.mark.asyncio
     async def test_health_endpoint(self):
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
             response = await client.get("/health")
         assert response.status_code == 200
         data = response.json()
@@ -19,7 +21,9 @@ class TestHealthCheck:
 
     @pytest.mark.asyncio
     async def test_root_endpoint(self):
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
             response = await client.get("/")
         assert response.status_code == 200
         data = response.json()

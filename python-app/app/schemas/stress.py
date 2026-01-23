@@ -59,9 +59,7 @@ class SafetyFactorRequest(BaseModel):
     yield_strength: float = Field(
         ..., gt=0, description="Material yield strength in Pascals"
     )
-    applied_stress: float = Field(
-        ..., gt=0, description="Applied stress in Pascals"
-    )
+    applied_stress: float = Field(..., gt=0, description="Applied stress in Pascals")
 
 
 class SafetyFactorResponse(BaseModel):
