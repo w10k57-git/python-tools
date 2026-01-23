@@ -1,14 +1,14 @@
 """Beam mechanics calculation endpoints."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from app.schemas.beam import (
     BeamDeflectionRequest,
     BeamDeflectionResponse,
-    BendingMomentRequest,
-    BendingMomentResponse,
     BeamStressRequest,
     BeamStressResponse,
+    BendingMomentRequest,
+    BendingMomentResponse,
 )
 from app.services import beam_service
 
@@ -26,22 +26,12 @@ async def calculate_deflection(request: BeamDeflectionRequest):
 
     Returns deflection in both meters and millimeters.
     """
-    deflection = beam_service.calculate_deflection(
+    return beam_service.calculate_deflection(
         request.load,
         request.length,
         request.elastic_modulus,
         request.moment_of_inertia,
         request.support_type,
-    )
-
-    return BeamDeflectionResponse(
-        load=request.load,
-        length=request.length,
-        elastic_modulus=request.elastic_modulus,
-        moment_of_inertia=request.moment_of_inertia,
-        support_type=request.support_type,
-        deflection=deflection,
-        deflection_mm=deflection * 1000,
     )
 
 
@@ -54,18 +44,12 @@ async def calculate_bending_moment(request: BendingMomentRequest):
     the support type and load configuration.
     """
     if request.distance > request.length:
-        return {"error": "Distance cannot exceed beam length"}
+        raise HTTPException(
+            status_code=400, detail="Distance cannot exceed beam length"
+        )
 
-    moment = beam_service.calculate_bending_moment(
+    return beam_service.calculate_bending_moment(
         request.load, request.length, request.distance, request.support_type
-    )
-
-    return BendingMomentResponse(
-        load=request.load,
-        length=request.length,
-        distance=request.distance,
-        support_type=request.support_type,
-        bending_moment=moment,
     )
 
 
@@ -83,16 +67,8 @@ async def calculate_beam_stress(request: BeamStressRequest):
 
     Returns stress in both Pascals and MPa.
     """
-    stress = beam_service.calculate_beam_stress(
+    return beam_service.calculate_beam_stress(
         request.bending_moment,
         request.distance_from_neutral,
         request.moment_of_inertia,
-    )
-
-    return BeamStressResponse(
-        bending_moment=request.bending_moment,
-        distance_from_neutral=request.distance_from_neutral,
-        moment_of_inertia=request.moment_of_inertia,
-        stress=stress,
-        stress_mpa=stress / 1e6,
     )

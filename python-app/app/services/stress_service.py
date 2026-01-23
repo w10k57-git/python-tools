@@ -2,8 +2,15 @@
 
 import math
 
+from app.schemas.stress import (
+    TensileStressResponse,
+    ShearStressResponse,
+    VonMisesStressResponse,
+    SafetyFactorResponse,
+)
 
-def calculate_tensile_stress(force: float, area: float) -> float:
+
+def calculate_tensile_stress(force: float, area: float) -> TensileStressResponse:
     """
     Calculate tensile (or compressive) stress.
 
@@ -14,13 +21,19 @@ def calculate_tensile_stress(force: float, area: float) -> float:
         area: Cross-sectional area in m^2
 
     Returns:
-        Stress in Pascals
+        TensileStressResponse with all calculated values
     """
     stress = force / area
-    return stress
+
+    return TensileStressResponse(
+        force=force,
+        area=area,
+        stress=stress,
+        stress_mpa=stress / 1e6,
+    )
 
 
-def calculate_shear_stress(force: float, area: float) -> float:
+def calculate_shear_stress(force: float, area: float) -> ShearStressResponse:
     """
     Calculate shear stress.
 
@@ -31,13 +44,21 @@ def calculate_shear_stress(force: float, area: float) -> float:
         area: Shear area in m^2
 
     Returns:
-        Shear stress in Pascals
+        ShearStressResponse with all calculated values
     """
     shear_stress = force / area
-    return shear_stress
+
+    return ShearStressResponse(
+        force=force,
+        area=area,
+        shear_stress=shear_stress,
+        shear_stress_mpa=shear_stress / 1e6,
+    )
 
 
-def calculate_von_mises(sigma_x: float, sigma_y: float, tau_xy: float) -> float:
+def calculate_von_mises(
+    sigma_x: float, sigma_y: float, tau_xy: float
+) -> VonMisesStressResponse:
     """
     Calculate Von Mises equivalent stress for plane stress condition.
 
@@ -49,15 +70,24 @@ def calculate_von_mises(sigma_x: float, sigma_y: float, tau_xy: float) -> float:
         tau_xy: Shear stress in xy-plane (Pascals)
 
     Returns:
-        Von Mises stress in Pascals
+        VonMisesStressResponse with all calculated values
     """
     von_mises_stress = math.sqrt(
         sigma_x**2 - sigma_x * sigma_y + sigma_y**2 + 3 * tau_xy**2
     )
-    return von_mises_stress
+
+    return VonMisesStressResponse(
+        sigma_x=sigma_x,
+        sigma_y=sigma_y,
+        tau_xy=tau_xy,
+        von_mises_stress=von_mises_stress,
+        von_mises_stress_mpa=von_mises_stress / 1e6,
+    )
 
 
-def calculate_safety_factor(yield_strength: float, applied_stress: float) -> dict:
+def calculate_safety_factor(
+    yield_strength: float, applied_stress: float
+) -> SafetyFactorResponse:
     """
     Calculate factor of safety.
 
@@ -68,7 +98,7 @@ def calculate_safety_factor(yield_strength: float, applied_stress: float) -> dic
         applied_stress: Applied stress in Pascals
 
     Returns:
-        Dictionary with safety_factor and status
+        SafetyFactorResponse with all calculated values
     """
     safety_factor = yield_strength / applied_stress
 
@@ -80,7 +110,9 @@ def calculate_safety_factor(yield_strength: float, applied_stress: float) -> dic
     else:
         status = "UNSAFE"
 
-    return {
-        "safety_factor": safety_factor,
-        "status": status,
-    }
+    return SafetyFactorResponse(
+        yield_strength=yield_strength,
+        applied_stress=applied_stress,
+        safety_factor=safety_factor,
+        status=status,
+    )

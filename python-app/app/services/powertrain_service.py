@@ -2,8 +2,14 @@
 
 import math
 
+from app.schemas.powertrain import (
+    GearRatioResponse,
+    TorqueResponse,
+    PowerResponse,
+)
 
-def calculate_gear_ratio(driver_teeth: int, driven_teeth: int) -> dict:
+
+def calculate_gear_ratio(driver_teeth: int, driven_teeth: int) -> GearRatioResponse:
     """
     Calculate gear ratio and speed reduction.
 
@@ -12,20 +18,22 @@ def calculate_gear_ratio(driver_teeth: int, driven_teeth: int) -> dict:
         driven_teeth: Number of teeth on driven gear
 
     Returns:
-        Dictionary with gear_ratio and speed_reduction
+        GearRatioResponse with all calculated values
     """
     gear_ratio = driven_teeth / driver_teeth
     speed_reduction = 1 / gear_ratio
 
-    return {
-        "gear_ratio": gear_ratio,
-        "speed_reduction": speed_reduction,
-    }
+    return GearRatioResponse(
+        driver_teeth=driver_teeth,
+        driven_teeth=driven_teeth,
+        gear_ratio=gear_ratio,
+        speed_reduction=speed_reduction,
+    )
 
 
 def calculate_torque_output(
     input_torque: float, gear_ratio: float, efficiency: float = 0.95
-) -> float:
+) -> TorqueResponse:
     """
     Calculate output torque considering gear ratio and efficiency.
 
@@ -37,13 +45,19 @@ def calculate_torque_output(
         efficiency: Mechanical efficiency (0-1), default 0.95
 
     Returns:
-        Output torque in Nm
+        TorqueResponse with all calculated values
     """
     output_torque = input_torque * gear_ratio * efficiency
-    return output_torque
+
+    return TorqueResponse(
+        input_torque=input_torque,
+        gear_ratio=gear_ratio,
+        efficiency=efficiency,
+        output_torque=output_torque,
+    )
 
 
-def calculate_power(torque: float, rpm: float) -> dict:
+def calculate_power(torque: float, rpm: float, unit: str = "watts") -> PowerResponse:
     """
     Calculate power from torque and RPM.
 
@@ -55,9 +69,10 @@ def calculate_power(torque: float, rpm: float) -> dict:
     Args:
         torque: Torque in Nm
         rpm: Rotational speed in RPM
+        unit: Output unit preference
 
     Returns:
-        Dictionary with power_watts and power_hp
+        PowerResponse with all calculated values
     """
     # Convert RPM to rad/s
     angular_velocity = rpm * 2 * math.pi / 60
@@ -68,7 +83,10 @@ def calculate_power(torque: float, rpm: float) -> dict:
     # Convert to horsepower
     power_hp = power_watts / 745.7
 
-    return {
-        "power_watts": power_watts,
-        "power_hp": power_hp,
-    }
+    return PowerResponse(
+        torque=torque,
+        rpm=rpm,
+        power_watts=power_watts,
+        power_hp=power_hp,
+        unit=unit,
+    )

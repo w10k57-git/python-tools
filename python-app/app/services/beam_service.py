@@ -1,5 +1,11 @@
 """Beam mechanics calculation service."""
 
+from app.schemas.beam import (
+    BeamDeflectionResponse,
+    BendingMomentResponse,
+    BeamStressResponse,
+)
+
 
 def calculate_deflection(
     load: float,
@@ -7,7 +13,7 @@ def calculate_deflection(
     elastic_modulus: float,
     moment_of_inertia: float,
     support_type: str,
-) -> float:
+) -> BeamDeflectionResponse:
     """
     Calculate maximum beam deflection.
 
@@ -23,7 +29,7 @@ def calculate_deflection(
         support_type: 'simply_supported' or 'cantilever'
 
     Returns:
-        Maximum deflection in meters
+        BeamDeflectionResponse with all calculated values
     """
     if support_type == "simply_supported":
         # Simply supported beam with center load
@@ -34,12 +40,20 @@ def calculate_deflection(
     else:
         raise ValueError(f"Unknown support type: {support_type}")
 
-    return deflection
+    return BeamDeflectionResponse(
+        load=load,
+        length=length,
+        elastic_modulus=elastic_modulus,
+        moment_of_inertia=moment_of_inertia,
+        support_type=support_type,
+        deflection=deflection,
+        deflection_mm=deflection * 1000,
+    )
 
 
 def calculate_bending_moment(
     load: float, length: float, distance: float, support_type: str
-) -> float:
+) -> BendingMomentResponse:
     """
     Calculate bending moment at a specific location.
 
@@ -54,7 +68,7 @@ def calculate_bending_moment(
         support_type: 'simply_supported' or 'cantilever'
 
     Returns:
-        Bending moment in Nm
+        BendingMomentResponse with all calculated values
     """
     if support_type == "simply_supported":
         # Simply supported beam with center load
@@ -70,12 +84,18 @@ def calculate_bending_moment(
     else:
         raise ValueError(f"Unknown support type: {support_type}")
 
-    return moment
+    return BendingMomentResponse(
+        load=load,
+        length=length,
+        distance=distance,
+        support_type=support_type,
+        bending_moment=moment,
+    )
 
 
 def calculate_beam_stress(
     bending_moment: float, distance_from_neutral: float, moment_of_inertia: float
-) -> float:
+) -> BeamStressResponse:
     """
     Calculate bending stress in a beam.
 
@@ -87,7 +107,14 @@ def calculate_beam_stress(
         moment_of_inertia: Second moment of area (I) in m^4
 
     Returns:
-        Bending stress in Pascals
+        BeamStressResponse with all calculated values
     """
     stress = (bending_moment * distance_from_neutral) / moment_of_inertia
-    return stress
+
+    return BeamStressResponse(
+        bending_moment=bending_moment,
+        distance_from_neutral=distance_from_neutral,
+        moment_of_inertia=moment_of_inertia,
+        stress=stress,
+        stress_mpa=stress / 1e6,
+    )

@@ -5,10 +5,10 @@ from fastapi import APIRouter
 from app.schemas.powertrain import (
     GearRatioRequest,
     GearRatioResponse,
-    TorqueRequest,
-    TorqueResponse,
     PowerRequest,
     PowerResponse,
+    TorqueRequest,
+    TorqueResponse,
 )
 from app.services import powertrain_service
 
@@ -24,15 +24,8 @@ async def calculate_gear_ratio(request: GearRatioRequest):
     A gear ratio > 1 means speed reduction (torque multiplication).
     A gear ratio < 1 means speed increase (torque reduction).
     """
-    result = powertrain_service.calculate_gear_ratio(
+    return powertrain_service.calculate_gear_ratio(
         request.driver_teeth, request.driven_teeth
-    )
-
-    return GearRatioResponse(
-        driver_teeth=request.driver_teeth,
-        driven_teeth=request.driven_teeth,
-        gear_ratio=result["gear_ratio"],
-        speed_reduction=result["speed_reduction"],
     )
 
 
@@ -45,15 +38,8 @@ async def calculate_torque(request: TorqueRequest):
 
     Efficiency accounts for mechanical losses (friction, etc.)
     """
-    output_torque = powertrain_service.calculate_torque_output(
+    return powertrain_service.calculate_torque_output(
         request.input_torque, request.gear_ratio, request.efficiency
-    )
-
-    return TorqueResponse(
-        input_torque=request.input_torque,
-        gear_ratio=request.gear_ratio,
-        efficiency=request.efficiency,
-        output_torque=output_torque,
     )
 
 
@@ -66,12 +52,4 @@ async def calculate_power(request: PowerRequest):
 
     Returns power in both Watts and horsepower.
     """
-    result = powertrain_service.calculate_power(request.torque, request.rpm)
-
-    return PowerResponse(
-        torque=request.torque,
-        rpm=request.rpm,
-        power_watts=result["power_watts"],
-        power_hp=result["power_hp"],
-        unit=request.unit,
-    )
+    return powertrain_service.calculate_power(request.torque, request.rpm, request.unit)

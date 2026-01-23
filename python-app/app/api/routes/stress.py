@@ -27,14 +27,7 @@ async def calculate_tensile_stress(request: TensileStressRequest):
     Positive force indicates tension, negative indicates compression.
     Returns stress in both Pascals and MPa.
     """
-    stress = stress_service.calculate_tensile_stress(request.force, request.area)
-
-    return TensileStressResponse(
-        force=request.force,
-        area=request.area,
-        stress=stress,
-        stress_mpa=stress / 1e6,
-    )
+    return stress_service.calculate_tensile_stress(request.force, request.area)
 
 
 @router.post("/shear", response_model=ShearStressResponse)
@@ -47,14 +40,7 @@ async def calculate_shear_stress(request: ShearStressRequest):
     Shear stress occurs when forces are applied parallel to a surface.
     Returns stress in both Pascals and MPa.
     """
-    shear_stress = stress_service.calculate_shear_stress(request.force, request.area)
-
-    return ShearStressResponse(
-        force=request.force,
-        area=request.area,
-        shear_stress=shear_stress,
-        shear_stress_mpa=shear_stress / 1e6,
-    )
+    return stress_service.calculate_shear_stress(request.force, request.area)
 
 
 @router.post("/von-mises", response_model=VonMisesStressResponse)
@@ -67,16 +53,8 @@ async def calculate_von_mises_stress(request: VonMisesStressRequest):
     Von Mises stress is used in failure prediction for ductile materials.
     Returns stress in both Pascals and MPa.
     """
-    von_mises = stress_service.calculate_von_mises(
+    return stress_service.calculate_von_mises(
         request.sigma_x, request.sigma_y, request.tau_xy
-    )
-
-    return VonMisesStressResponse(
-        sigma_x=request.sigma_x,
-        sigma_y=request.sigma_y,
-        tau_xy=request.tau_xy,
-        von_mises_stress=von_mises,
-        von_mises_stress_mpa=von_mises / 1e6,
     )
 
 
@@ -92,13 +70,6 @@ async def calculate_safety_factor(request: SafetyFactorRequest):
     - MARGINAL: 1.0 <= SF < 2.0
     - UNSAFE: SF < 1.0
     """
-    result = stress_service.calculate_safety_factor(
+    return stress_service.calculate_safety_factor(
         request.yield_strength, request.applied_stress
-    )
-
-    return SafetyFactorResponse(
-        yield_strength=request.yield_strength,
-        applied_stress=request.applied_stress,
-        safety_factor=result["safety_factor"],
-        status=result["status"],
     )
