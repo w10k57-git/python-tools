@@ -1,7 +1,6 @@
 """FastAPI application entry point."""
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.config import settings
@@ -13,15 +12,6 @@ app = FastAPI(
     description="REST API for mechanical engineering calculations including powertrain analysis, beam mechanics, and stress analysis",
     docs_url="/docs",
     redoc_url="/redoc",
-)
-
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
 )
 
 # Register routes

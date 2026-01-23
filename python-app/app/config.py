@@ -13,7 +13,6 @@ class Settings(BaseSettings):
     app_name: str = "Mechanical Engineering API"
     api_version: str = "v1"
     debug: bool = False
-    cors_origins: list[str] = ["*"]
 
 
 settings = Settings()
