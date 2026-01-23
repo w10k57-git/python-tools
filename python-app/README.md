@@ -324,22 +324,6 @@ Once the server is running, visit:
 
 Both provide interactive API documentation where you can test endpoints directly from your browser.
 
-## Development
-
-### Running Tests
-
-```bash
-cd python-app
-uv sync --extra dev
-uv run pytest tests/ -v
-```
-
-### Running with Coverage
-
-```bash
-uv run pytest --cov=app --cov-report=html
-```
-
 ### Project Structure
 
 ```
@@ -414,7 +398,7 @@ Create a `.env` file:
 
 ```bash
 # Application Settings
-APP_NAME=Mechanical Engineering API
+APP_NAME="Mechanical Engineering API"
 API_VERSION=v1
 DEBUG=false
 
@@ -477,7 +461,3 @@ WORKERS=1
 - Stress-strain relationships
 - Failure prediction (Von Mises)
 - Safety factor assessment
-
-## License
-
-MIT
